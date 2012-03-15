@@ -1,0 +1,13 @@
+#EditableHandlers
+
+This is a project which will include different tools to edit/play with geometries in Leaflet.
+Currenlty I only added support for Circle edition.
+That is, the user can move the circle as well as increase the radius of the circle by just using the drag areas.
+
+CircleEditor extends from L.Circle and adds the handlers in order to move and increase the area.
+To use it is the same way as initializing a Circle, with the difference that you will just call CircleEditor.
+
+For example like this:
+
+var eCircle = new L.CircleEditor(locationLatLng, 500 /*radius in meters*/, circleOptions);
+map.addLayer(eCircle);
