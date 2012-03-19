@@ -120,6 +120,8 @@ L.CircleEditor = L.Circle.extend ({
 		var mm = this._markers[1];
 		mm.setLatLng(northCenterCoord);
 		mm.setOpacity(1);
+
+		this.fire('centerchange');
 	},
 
 	_onMarkerDrag: function (e) {
@@ -134,5 +136,10 @@ L.CircleEditor = L.Circle.extend ({
         
 		this.redraw();
 		//console.log("END");
-	}
+
+		this.fire('radiuschange');
+	},
+
+	centerchange: function() {},
+	radiuschange: function() {}
 });

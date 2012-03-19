@@ -63,6 +63,14 @@
                 polyline.on('edit', function() {
                     console.log('Polyline was edited!');
                 });
+
+		circle.on('centerchange', function() {
+			console.log('the circle has moved.');
+		});
+
+		circle.on('radiuschange', function() {
+			console.log('the radius has chahged to: ' + this._mRadius);
+		});
 	</script>
 </body>
 </html>
