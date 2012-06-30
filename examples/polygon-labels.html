@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet, example for PolySideLabels</title>
+
+	<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
+	<![endif]-->
+
+	<script src="../lib/jquery-1.6.4.min.js"></script>
+	<script src="../lib/leaflet.js"></script>
+	<script src="../src/L.CircleEditor.js" ></script> 
+	<script src="../src/L.PolySideLabel.js" ></script> 
+	
+	<style type="text/css">
+	    .poly-label .leaflet-popup-content-wrapper {
+            border-radius: 4px 4px 4px 4px;
+            opacity: 0.7;
+            padding: 1px;
+            text-align: center;
+        }
+        .poly-label .leaflet-popup-content {
+            margin: 0 5px;
+            width: 0px;
+        }
+        .poly-label .leaflet-popup-tip-container {
+            display: none;
+        }
+	</style>
+</head>
+<body>
+	<div id="map" style="width: 800px; height: 600px; border: 1px solid #ccc"></div>
+
+	<script src="route.js"></script>
+	<script>
+		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
+			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
+			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(51.505, -0.04), zoom: 13});
+
+        map.addControl(new L.Control.Scale({ position: 'bottomleft' }));
+
+		var polygon = new L.Polygon([
+			new L.LatLng(51.51, -0.1),
+			new L.LatLng(51.5, -0.06),
+			new L.LatLng(51.52, -0.03)
+		]);
+
+		polygon.editing.enable();
+
+		map.addLayer(polygon);
+		var labelPolygon = new L.PolySideLabel(polygon, {minSideLength:40, minAreaToShow:0.0025, bodersLimit:2 });
+
+		var polyline = new L.Polyline([
+			new L.LatLng(51.49, -0.02),
+			new L.LatLng(51.51, 0),
+			new L.LatLng(51.52, -0.02)
+		]);
+
+		polyline.editing.enable();
+
+		map.addLayer(polyline);
+		var labelPolyline = new L.PolySideLabel(polyline);
+		
+		var circleLocation = new L.LatLng(51.51, -0.03),
+		circleOptions = {
+		    color: 'red', 
+		    fillColor: 'yellow', 
+		    fillOpacity: 0.7
+		};
+        var circle = new L.CircleEditor(circleLocation, 500, circleOptions);
+		//circleMarker = new L.CircleMarker(circleLocation, {fillColor: 'blue', fillOpacity: 1, stroke: false});
+		
+		map.addLayer(circle);
+		var labelCircle = new L.PolySideLabel(circle);
+		
+		circle.bindPopup('I am a circle');
+		//circleMarker.bindPopup('I am a circle marker');
+
+		circle.on('edit', function() {
+                    console.log('Circle was edited!');
+                });
+                polygon.on('edit', function() {
+                    console.log('Polygon was edited!');
+                });
+                polyline.on('edit', function() {
+                    console.log('Polyline was edited!');
+                });
+
+		circle.on('centerchange', function() {
+			console.log('the circle has moved.');
+		});
+
+		circle.on('radiuschange', function() {
+			console.log('the radius has chahged to: ' + this._mRadius);
+		});
+	</script>
+</body>
+</html>
