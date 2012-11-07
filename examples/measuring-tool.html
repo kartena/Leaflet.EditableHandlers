@@ -13,12 +13,12 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-	<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
+	<link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
 	<!--[if lte IE 8]>
-		<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
+		<link rel="stylesheet" href="../lib/leaflet/leaflet.ie.css" />
 	<![endif]-->
 
-	<script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+	<script src="../lib/leaflet/leaflet-src.js"></script>
 	<script src="../lib/jquery-1.6.4.min.js"></script>
 	<script src="../src/L.MeasuringTool.js"></script>
 
@@ -80,7 +80,7 @@
 	<div id="mt-drag-icons" class="btn btn-primary btn-large btn-margins">Different drag icons</div>
 	<div id="mt-tt-look" class="btn btn-primary btn-large btn-margins">Different tooltip look</div>
 </div>
-	<div id="map" style="border: 1px solid #ccc""></div>
+	<div id="map" style="border: 1px solid #ccc"></div>
 <script>
 	var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
 		cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18});
@@ -126,9 +126,9 @@
 		} else {
 			$(this).addClass('active');
 			if (!mtDrag) {
-				dragIconStart = new L.Icon('http://leaflet.cloudmade.com/docs/images/leaf-orange.png');
+				dragIconStart = new L.Icon({ iconUrl: 'http://leaflet.cloudmade.com/docs/images/leaf-orange.png'});
 
-				dragIconEnd = new L.Icon('http://leaflet.cloudmade.com/docs/images/leaf-green.png');
+				dragIconEnd = new L.Icon({ iconUrl: 'http://leaflet.cloudmade.com/docs/images/leaf-green.png'});
 				mtDrag = new L.MeasuringTool(map, optionsDrag, dragIconStart, dragIconEnd);
 			}
 			mtDrag.enable();

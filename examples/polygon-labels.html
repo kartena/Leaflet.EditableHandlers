@@ -3,13 +3,13 @@
 <head>
 	<title>Leaflet, example for PolySideLabels</title>
 
-	<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
+	<link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
 	<!--[if lte IE 8]>
-		<link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
+		<link rel="stylesheet" href="../lib/leaflet/leaflet.ie.css" />
 	<![endif]-->
 
 	<script src="../lib/jquery-1.6.4.min.js"></script>
-	<script src="../lib/leaflet.js"></script>
+	<script src="../lib/leaflet/leaflet-src.js"></script>
 	<script src="../src/L.CircleEditor.js" ></script> 
 	<script src="../src/L.PolySideLabel.js" ></script> 
 	
@@ -49,7 +49,8 @@
 		polygon.editing.enable();
 
 		map.addLayer(polygon);
-		var labelPolygon = new L.PolySideLabel(polygon, {minSideLength:40, minAreaToShow:0.0025, bodersLimit:2 });
+		// Test bordersLimit by adding two points to the polygon and see that the labels are shut down
+		var labelPolygon = new L.PolySideLabel(polygon, {minSideLength:40, minAreaToShow:0.0025, bordersLimit: 4 });
 
 		var polyline = new L.Polyline([
 			new L.LatLng(51.49, -0.02),

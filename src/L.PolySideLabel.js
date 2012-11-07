@@ -24,14 +24,14 @@ L.PolySideLabel = L.Class.extend({
         offset: new L.Point(0, -20),
         minSideLength: 40, //Min length for a side in meters before using Charactes
         minAreaToShow: 0.0025, //Min area for which is worth showing the distance info
-        bodersLimit: 8
+        bordersLimit: 8
     },
     
     initialize: function (polyObj, options) {
    		L.Util.setOptions(this, options);
         this._polygon = polyObj;
         this._labelsList = [];
-        this._numberOfBordersLimit = this.options.bodersLimit;
+        this._numberOfBordersLimit = this.options.bordersLimit;
         this._isViewable = null;
 
         //If it is attached to the map
