@@ -57,7 +57,12 @@ L.CircleEditor = L.Circle.extend ({
 		var circleBounds = this.getBounds(),
 			swCoord = circleBounds.getSouthWest(),
 			neCoord = circleBounds.getNorthEast(),
-			northCenterCoord = new L.LatLng(neCoord.lat, (neCoord.lng + neCoord.lng) / 2, true),
+			rLat = (neCoord.lat - swCoord.lat) / 2,
+			rLng = (neCoord.lng - swCoord.lng) / 2,
+			northCenterCoord = new L.LatLng(
+				neCoord.lat - rLat + rLat / Math.SQRT2, 
+				neCoord.lng - rLng + rLng / Math.SQRT2,
+				true),
 			markerNorthCenter = this._createMarker(northCenterCoord, 1);
 		this._markers.push(markerNorthCenter);
 	},
