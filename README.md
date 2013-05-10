@@ -2,7 +2,7 @@
 
 This is a project which will include different tools to edit/play with geometries in Leaflet.
 Currenlty I added support for:
-* Circle edition (L.CircleEditor)
+* Circle editor (L.CircleEditor)
 * Measuring tool (L.MeasuringTool)
 * Label for the polygon sides (L.PolySideLabel)
 
