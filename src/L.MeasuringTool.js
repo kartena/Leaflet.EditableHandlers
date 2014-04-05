@@ -12,13 +12,13 @@ L.MeasuringTool = L.Class.extend({
 		L.Util.setOptions(this, options);
 		this._map = map;
 
-		this._diStart = iconStart;
-		this._diEnd = iconEnd;
-		this._measureStart = null;
-		this._measureStop = null;
 		this._measureLine = null;
 		this._distancePopup = null;
 		this._markerList = [];
+		this._markerIcons = null;
+		if (iconStart || iconEnd) {
+			this._markerIcons = [iconStart, iconEnd];
+		}
 	},
 
 	options: {
@@ -30,11 +30,11 @@ L.MeasuringTool = L.Class.extend({
 	},
 
 	enable: function() {
-		this._map.on('click', this._onMapClick, this);
+		this._map.on('click', this._addMarker, this);
 	},
 
 	disable: function () {
-		this._map.off('click', this._onMapClick, this);
+		this._map.off('click', this._addMarker, this);
 
 		if (this._distancePopup) {
 			this._map.removeLayer(this._distancePopup);
@@ -44,58 +44,69 @@ L.MeasuringTool = L.Class.extend({
 			this._map.removeLayer(this._measureLine);
 			this._measureLine = undefined;
 		}
-		if (this._measureStop) {
-			this._map.removeLayer(this._measureStop);
-			this._measureStop = undefined;
-		}
-		if (this._measureStart) {
-			this._map.removeLayer(this._measureStart);
-			this._measureStart = undefined;
-		}
 
 		for (var i = 0; this._markerList.length; i++) {
 			var marker = this._markerList.pop();
+			marker.off('drag', this._updateRuler, this)
+				  .off("click", this._showPopup, this);
+
 			this._map.removeLayer(marker);
 		}
 	},
 
-	_onMapClick: function (e) {
+	_addMarker: function(e) {
+		var markerPosition = this._markerList.length;
+		if (markerPosition >= 2) {
+			return;
+		}
+
 		var markerLocation = e.latlng;
 		var marker = new L.Marker(markerLocation, {draggable:true});
-		if (this._measureStop) { return; }
 		this._map.addLayer(marker);
-		if (!this._measureStart) {
-			this._measureStart = e.latlng;
-			if (this._diStart) {
-				marker.setIcon(this._diStart);
-			}
-			marker._pos = 0;
-		} else  if (!this._measureStop) {
-			this._measureStop = e.latlng;
-			if (this._diEnd) {
-				marker.setIcon(this._diEnd);
-			}
-			marker._pos = 1;
-			
-			//Do not worry, I decided to set this as the standard behaviour.
-			//But you can change the style by setting your own class "lineClassName"
-			this._measureLine = new L.Polyline([
-				this._measureStart, e.latlng
-			    ], { color: "black", opacity: 0.5, stroke: true });
-			    
-			this._map.addLayer(this._measureLine);
-			this._measureLine._path.setAttribute("class", this.options['lineClassName']);
-
-			var centerPos = new L.LatLng((this._measureStart.lat + this._measureStop.lat)/2, 
-										 (this._measureStart.lng + this._measureStop.lng)/2);
-			var distance = this._measureStart.distanceTo(this._measureStop);
-
-			this.setContent(distance, centerPos);
-			this._map.addLayer(this._distancePopup)
-                         .fire('popupopen', { popup: this._distancePopup });
+		if (this._markerIcons && this._markerIcons[markerPosition]) {
+			marker.setIcon(this._markerIcons[markerPosition]);
 		}
+		marker._pos = markerPosition;
+
 		marker.on('drag', this._updateRuler, this);
+
 		this._markerList.push(marker);
+		this._setupLine();
+		this._hookShowPopupEvent();
+	},
+
+	_setupLine: function() {
+		if (this._markerList.length <= 1) {
+			return;
+		}
+		var startLatLng = this._markerList[0].getLatLng()
+			endLatLng = this._markerList[1].getLatLng();
+		//Do not worry, I decided to set this as the standard behaviour.
+		//But you can change the style by setting your own class "lineClassName"
+		this._measureLine = new L.Polyline(
+			[startLatLng, endLatLng ], 
+			{ color: "black", opacity: 0.5, stroke: true });
+
+		this._map.addLayer(this._measureLine);
+		this._measureLine._path.setAttribute("class", this.options['lineClassName']);
+
+		var centerPos = new L.LatLng((startLatLng.lat + endLatLng.lat)/2, 
+									 (startLatLng.lng + endLatLng.lng)/2),
+			distance = startLatLng.distanceTo(endLatLng);
+
+		this.setContent(distance, centerPos);
+		this._distancePopup.openOn(this._map);
+	},
+
+	_hookShowPopupEvent: function() {
+		if (this._markerList.length <= 1) {
+			return;
+		}
+
+		var _this = this;
+		for(var i = 0; i < this._markerList.length; i++) {
+			this._markerList[i].on("click", this._showPopup, this);
+		}
 	},
 
 	_updateRuler: function (e) {
@@ -113,6 +124,10 @@ L.MeasuringTool = L.Class.extend({
 		}
 	},
 
+	_showPopup: function() {
+		this._distancePopup.openOn(this._map);
+	},
+
 	setContent: function (distance, coord) {
 		if (!this._distancePopup) {
 			this._distancePopup = new L.Popup(this.options, this);
@@ -120,5 +135,17 @@ L.MeasuringTool = L.Class.extend({
 
 		this._distancePopup.setContent("<b>Distance: </b></br>"+distance.toFixed(2)+"m.");
 		this._distancePopup.setLatLng(coord);
-	}
+	},
+
+	fire: function (fnName, params) {
+		if (fnName) {
+			console.log("fn called is: " + fnName);
+			if (this[fnName]) {
+				this[fnName](params);
+			}
+		}
+	},
+
+	popupopen: function(obj) {},
+	popupclose: function(obj) {}
 });
