@@ -83,7 +83,9 @@
 	<div id="map" style="border: 1px solid #ccc"></div>
 <script>
 	var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
+	//var cloudmadeUrl = 'https://a.tiles.mapbox.com/v3/liedman.h9ekn0f1/{z}/{x}/{y}.png',
 		cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18});
+
 	var map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(51.505, -0.04), zoom: 13});
 	//map.addControl(new L.Control.Scale());
 
@@ -103,6 +105,9 @@
 				measuringTool.disable();
 			}
 		} else {
+			// only 1 option can be active
+			$('.btn.btn-primary.active').click();
+
 			$(this).addClass('active');
 			if (!measuringTool) {
 				measuringTool = new L.MeasuringTool(map);
@@ -124,6 +129,9 @@
 				mtDrag.disable();
 			}
 		} else {
+			// only 1 option can be active
+			$('.btn.btn-primary.active').click();
+
 			$(this).addClass('active');
 			if (!mtDrag) {
 				dragIconStart = new L.Icon({ iconUrl: 'http://leaflet.cloudmade.com/docs/images/leaf-orange.png'});
@@ -139,6 +147,8 @@
 /*******************Different tooltip look***************/
 	var mtTooltip;
 	var optionsTooltip = {
+        displayTotalDistance: false,
+        displayPartialDistance: true,
         className: 'measuring-label-tooltip',
 		lineClassName: 'measuring-line-for-look'
     };
@@ -150,6 +160,9 @@
 				mtTooltip.disable();
 			}
 		} else {
+			// only 1 option can be active
+			$('.btn.btn-primary.active').click();
+
 			$(this).addClass('active');
 			if (!mtTooltip) {
 				mtTooltip = new L.MeasuringTool(map, optionsTooltip);
