@@ -115,7 +115,7 @@ L.PolySideLabel = L.Class.extend({
                 pu.setLatLng(pointsArray[i].Coord);
 
                 this._map.addLayer(pu);
-                this._map.fire('popupopen', {popup: pu});
+                //this._map.fire('popupopen', {popup: pu});
 
                 this._labelsList.push(pu);
 
