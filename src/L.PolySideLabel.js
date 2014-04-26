@@ -28,7 +28,7 @@ L.PolySideLabel = L.Class.extend({
     },
     
     initialize: function (polyObj, options) {
-   		L.Util.setOptions(this, options);
+        L.Util.setOptions(this, options);
         this._polygon = polyObj;
         this._labelsList = [];
         this._numberOfBordersLimit = this.options.bordersLimit;
