@@ -8,7 +8,8 @@ L.CircleEditor = L.Circle.extend ({
 		icon: new L.DivIcon({
 			iconSize: new L.Point(8, 8),
 			className: 'leaflet-div-icon leaflet-editing-icon'
-		})
+		}),
+		extendedIconClass : 'extend-icon'
 	},
 
 	onAdd: function (map) {
@@ -54,9 +55,9 @@ L.CircleEditor = L.Circle.extend ({
 		this._markers.push(markerCenter);
 
 		var circleBounds = this.getBounds(),
-			swCoord = circleBounds.getSouthWest(),
+			center = circleBounds.getCenter(),
 			neCoord = circleBounds.getNorthEast(),
-			northCenterCoord = new L.LatLng(neCoord.lat, (neCoord.lng + neCoord.lng) / 2, true),
+			northCenterCoord = new L.LatLng(center.lat, neCoord.lng, true);
 			markerNorthCenter = this._createMarker(northCenterCoord, 1);
 		this._markers.push(markerNorthCenter);
 	},
@@ -77,16 +78,32 @@ L.CircleEditor = L.Circle.extend ({
 		marker._isCenter = isCenter;
 
 		if (isCenter) {
-			marker.on('drag', this._onCenterMove, this);
-			marker.on('dragend', this._onCenterMoveEnd, this);
+			marker.on('drag', this._onCenterMove, this)
+				  .on('dragend', this._onCenterMoveEnd, this);
 		} else {
 			marker.on('drag', this._onMarkerDrag, this);
 		}
-		marker.on('dragend', this._fireEdit, this);
+		marker.on('dragend', this._fireEdit, this)
+			  .on('mouseover', this._onMouseOver, this)
+			  .on('mouseout', this._onMouseOut, this);
 
 		this._markerGroup.addLayer(marker);
 
 		return marker;
+	},
+	_onMouseOver: function (e) {
+		var target = e.target,
+			icon = target._icon,
+			classValues = icon.getAttribute("class");
+		//icon.setAttribute("class", "extend-icon " + classValues);
+		icon.setAttribute("class", this.options.extendedIconClass + " " + classValues);
+	},
+	_onMouseOut: function (e) {
+		var target = e.target,
+			icon = target._icon,
+			classValues = icon.getAttribute("class");
+		//icon.setAttribute("class", classValues.replace("extend-icon", ""));
+		icon.setAttribute("class", classValues.replace(this.options.extendedIconClass, ""));
 	},
 
 	_fireEdit: function () {
@@ -112,9 +129,9 @@ L.CircleEditor = L.Circle.extend ({
 		
 		//now resetting the side point
 		var circleBounds = this.getBounds(),
-			swCoord = circleBounds.getSouthWest(),
+			center = circleBounds.getCenter(),
 			neCoord = circleBounds.getNorthEast(),
-			northCenterCoord = new L.LatLng(neCoord.lat, (neCoord.lng + neCoord.lng) / 2, true);
+			northCenterCoord = new L.LatLng(center.lat, neCoord.lng, true);
 
 		var mm = this._markers[1];
 		mm.setLatLng(northCenterCoord);

@@ -59,9 +59,11 @@ L.PolySideLabel = L.Class.extend({
     /*TODO: This method should be re writen, it is too messy*/
     _showLabels: function () {
         if (this._labelsList.length > 0) {
+            console.log('the label list is full');
             return;
         }
         if (!this._isViewable) {
+            console.log('it is too small to be viewable');
             return;
         }
 
@@ -79,6 +81,8 @@ L.PolySideLabel = L.Class.extend({
 
         if (latlngs.length > this._numberOfBordersLimit) {
             showLabels = false;
+            console.log('max number of borders: '+this._numberOfBordersLimit+', there are: ' + latlngs.length);
+            return;
         }
 
         var pointsArray = [];
@@ -106,12 +110,12 @@ L.PolySideLabel = L.Class.extend({
         if (showLabels) {
             var pu, description = "";
             for (i = 0; i < pointsArray.length; i++) {
-                pu = new L.Popup(this.options, this);
+                pu = new L.Popup(this.options, this._polygon);
                 pu.setContent(isSmall ? String.fromCharCode(charCounter) : pointsArray[i].Unit);
                 pu.setLatLng(pointsArray[i].Coord);
 
-                this._map.addLayer(pu)
-                         .fire('popupopen', { popup: pu });
+                this._map.addLayer(pu);
+                //this._map.fire('popupopen', {popup: pu});
 
                 this._labelsList.push(pu);
 
@@ -122,11 +126,11 @@ L.PolySideLabel = L.Class.extend({
                 var bounds = this._polygon.getBounds();
                 var latLngNE = bounds.getNorthEast();
                 latLngNE = this._shiftPosition(latLngNE, 0, 35);
-                pu = new L.Popup(this.options, this);
+                pu = new L.Popup(this.options, this._polygon);
                 pu.setContent(description);
                 pu.setLatLng(latLngNE);
-                this._map.addLayer(pu)
-                        .fire('popupopen', { popup: pu });
+                this._map.addLayer(pu);
+                this._map.fire('popupopen', {popup: pu});
 
                 this._labelsList.push(pu);
             }
@@ -190,8 +194,6 @@ L.PolySideLabel = L.Class.extend({
             this._isViewable = false;
         }
         this._isViewable = true;
-        
-        //this._map.options.crs.scale = function (zoom) { return 1 / resolutions[zoom]; };
     },
 
     LengthUnit: function (meters) {

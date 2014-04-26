@@ -3,10 +3,11 @@
 <head>
 	<title>Leaflet debug page</title>
 
-	<link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="../lib/leaflet/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.css" />
+    <link rel="stylesheet" href="../css/marker-extend.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.ie.css" /><![endif]-->
 
-	<script src="../lib/leaflet/leaflet-src.js"></script>
+	<script src="../lib/leaflet-0.6.4/leaflet-src.js"></script>
 	<script src="../src/L.CircleEditor.js" ></script> 
 </head>
 <body>
@@ -19,50 +20,33 @@
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(51.505, -0.04), zoom: 13});
 
 
-		var polygon = new L.Polygon([
-			new L.LatLng(51.51, -0.1),
-			new L.LatLng(51.5, -0.06),
-			new L.LatLng(51.52, -0.03)
-		]);
-
-		polygon.editing.enable();
-
-		map.addLayer(polygon);
-
-		var polyline = new L.Polyline([
-			new L.LatLng(51.49, -0.02),
-			new L.LatLng(51.51, 0),
-			new L.LatLng(51.52, -0.02)
-		]);
-
-		polyline.editing.enable();
-
-		map.addLayer(polyline);
-
 		var circleLocation = new L.LatLng(51.51, -0.03),
 		circleOptions = {
 		    color: 'red', 
 		    fillColor: 'yellow', 
-		    fillOpacity: 0.7
+		    fillOpacity: 0.7,
+            extendedIconClass : 'extend-icon' /*there are 3 classes defined in the marker-extend.css file*/
 		};
-                var circle = new L.CircleEditor(circleLocation, 500, circleOptions);
-		//circleMarker = new L.CircleMarker(circleLocation, {fillColor: 'blue', fillOpacity: 1, stroke: false});
+        var circle = new L.CircleEditor(circleLocation, 500, circleOptions);
 		
 		map.addLayer(circle);
-                //map.addLayer(circleMarker);
 		
 		circle.bindPopup('I am a circle');
-		//circleMarker.bindPopup('I am a circle marker');
+
+
+        circleOptions = {
+            color: 'red', 
+            fillColor: 'yellow', 
+            fillOpacity: 0.7,
+            extendedIconClass : ''
+        };
+        var circle2 = new L.CircleEditor(new L.LatLng(51.51, -0.07), 500, circleOptions);
+        map.addLayer(circle2);
+
 
 		circle.on('edit', function() {
-                    console.log('Circle was edited!');
-                });
-                polygon.on('edit', function() {
-                    console.log('Polygon was edited!');
-                });
-                polyline.on('edit', function() {
-                    console.log('Polyline was edited!');
-                });
+            console.log('Circle was edited!');
+        });
 
 		circle.on('centerchange', function() {
 			console.log('the circle has moved.');
