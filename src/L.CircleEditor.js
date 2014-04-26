@@ -51,7 +51,6 @@ L.CircleEditor = L.Circle.extend ({
 		this._markers = [];
 
 		var markerCenter = this._createMarker(this._latlng, 0, true);
-		markerCenter.on('click', this._onCenterMarkerClick, this);
 		this._markers.push(markerCenter);
 
 		var circleBounds = this.getBounds(),
