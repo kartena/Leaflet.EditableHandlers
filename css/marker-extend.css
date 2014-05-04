@@ -1,0 +1,23 @@
+.leaflet-div-icon.extend-icon {
+	width: 16px !important;
+	height: 16px !important;
+
+	margin-left: -8px !important;
+    margin-top: -8px !important;
+}
+
+.leaflet-div-icon.extend-icon-medium {
+	width: 12px !important;
+	height: 12px !important;
+
+	margin-left: -6px !important;
+    margin-top: -6px !important;
+}
+
+.leaflet-div-icon.extend-icon-xl {
+	width: 20px !important;
+	height: 20px !important;
+
+	margin-left: -10px !important;
+    margin-top: -10px !important;
+}
