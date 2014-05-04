@@ -3,13 +3,17 @@
 <head>
 	<title>Leaflet, example for PolySideLabels</title>
 
-	<link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
+	<link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.css" />
+    <link rel="stylesheet" href="../css/marker-extend.css" />
+    <link rel="stylesheet" href="../lib/Leaflet.draw-0.2.0/dist/leaflet.draw.css" />
 	<!--[if lte IE 8]>
-		<link rel="stylesheet" href="../lib/leaflet/leaflet.ie.css" />
+		<link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.ie.css" />
+        <link rel="stylesheet" href="../lib/Leaflet.draw-0.2.0/dist/leaflet.draw.ie.css" />
 	<![endif]-->
 
 	<script src="../lib/jquery-1.6.4.min.js"></script>
-	<script src="../lib/leaflet/leaflet-src.js"></script>
+	<script src="../lib/leaflet-0.6.4/leaflet-src.js"></script>
+    <script src="../lib/Leaflet.draw-0.2.0/dist/leaflet.draw.js"></script>
 	<script src="../src/L.CircleEditor.js" ></script> 
 	<script src="../src/L.PolySideLabel.js" ></script> 
 	
@@ -40,6 +44,7 @@
 
         map.addControl(new L.Control.Scale({ position: 'bottomleft' }));
 
+        // adding polygons 
 		var polygon = new L.Polygon([
 			new L.LatLng(51.51, -0.1),
 			new L.LatLng(51.5, -0.06),
@@ -50,7 +55,7 @@
 
 		map.addLayer(polygon);
 		// Test bordersLimit by adding two points to the polygon and see that the labels are shut down
-		var labelPolygon = new L.PolySideLabel(polygon, {minSideLength:40, minAreaToShow:0.0025, bordersLimit: 4 });
+		var labelPolygon = new L.PolySideLabel(polygon, {minSideLength:40, minAreaToShow:0.0025, bordersLimit:  5});
 
 		var polyline = new L.Polyline([
 			new L.LatLng(51.49, -0.02),
@@ -70,7 +75,6 @@
 		    fillOpacity: 0.7
 		};
         var circle = new L.CircleEditor(circleLocation, 500, circleOptions);
-		//circleMarker = new L.CircleMarker(circleLocation, {fillColor: 'blue', fillOpacity: 1, stroke: false});
 		
 		map.addLayer(circle);
 		var labelCircle = new L.PolySideLabel(circle);
@@ -78,15 +82,16 @@
 		circle.bindPopup('I am a circle');
 		//circleMarker.bindPopup('I am a circle marker');
 
+        /*
 		circle.on('edit', function() {
-                    console.log('Circle was edited!');
-                });
-                polygon.on('edit', function() {
-                    console.log('Polygon was edited!');
-                });
-                polyline.on('edit', function() {
-                    console.log('Polyline was edited!');
-                });
+            console.log('Circle was edited!');
+        });
+        polygon.on('edit', function() {
+            console.log('Polygon was edited!');
+        });
+        polyline.on('edit', function() {
+            console.log('Polyline was edited!');
+        });
 
 		circle.on('centerchange', function() {
 			console.log('the circle has moved.');
@@ -95,6 +100,7 @@
 		circle.on('radiuschange', function() {
 			console.log('the radius has chahged to: ' + this._mRadius);
 		});
+        */
 	</script>
 </body>
 </html>
