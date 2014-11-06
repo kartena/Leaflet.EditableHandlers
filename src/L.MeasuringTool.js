@@ -33,7 +33,9 @@ L.MeasuringTool = L.Class.extend({
         displayTotalDistance: true,
         displayPartialDistance: false,
         className: 'measuring-label', /*css label class name*/
-        lineClassName: 'measuring-line-class' /*css class name for the line*/
+        lineClassName: 'measuring-line-class', /*css class name for the line*/
+	    popupTemplate: '<b>Total distance:</b></br>{distance}m',
+	    popupAnchor: [0, -25]
     },
 
     enable: function() {
@@ -274,9 +276,11 @@ L.MeasuringTool = L.Class.extend({
         // getting the last marker, whom will be the one showing the info
         var marker = this._markerList[totalMarkers - 1];
         // setting the correct content to the popup
-        this._totalDistancePopup.setContent('<b>Total distance:</b></br>' + totalDistance.toFixed(2) + 'm.');
+	    var content = L.Util.template(this.options.popupTemplate, {distance: totalDistance.toFixed(2)});
+        this._totalDistancePopup.setContent(content);
         // moving the popup a bit on top so it doesn't hide the last marker
-        var shiftedPosition = this._shiftPosition(marker.getLatLng(), -25, 0)
+	    var popupAnchor = L.point(this.options.popupAnchor);
+        var shiftedPosition = this._shiftPosition(marker.getLatLng(), popupAnchor.y, popupAnchor.x)
         this._totalDistancePopup.setLatLng(shiftedPosition);
         // displaying the popup
         this._popupLayer.addLayer(this._totalDistancePopup);
@@ -299,7 +303,8 @@ L.MeasuringTool = L.Class.extend({
             this._distancePopupList.push(popup);
         }
 
-        popup.setContent('<b>Distance:</b></br>' + distance.toFixed(2) + 'm.');
+	    var content = L.Util.template(this.options.popupTemplate, {distance: distance.toFixed(2)});
+        popup.setContent(content);
         popup.setLatLng(coord);
 
         // storing the partial distance in the popup
